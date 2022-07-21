@@ -1,8 +1,6 @@
 from django.utils import timezone
 from django.db import models
-from django.contrib.auth import get_user_model
-
-User = get_user_model()
+from django.conf import settings
 
 
 # Create your models here.
@@ -22,7 +20,7 @@ class Order(models.Model):
     )
 
     order_status = models.CharField(max_length=25, choices=ORDER_STATUSES, default=ORDER_STATUSES[0][0])
-    customer = models.ForeignKey(User)
+    customer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     delivery_at = models.DateTimeField(default=timezone.now)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -32,10 +30,6 @@ class Order(models.Model):
         return f"<Order to be delivered for {self.customer} to {self.address}>"
 
 class OrderItem(models.Model):
-    item = models.ForeignKey(MenuItem)
-    order = models.ForeignKey(Order)
+    item = models.ForeignKey(MenuItem, on_delete=models.CASCADE)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="items")
     quantity = models.IntegerField(default=1)
-
-    @property
-    def subtotal(self):
-        return "%.2f" % (float(self.item.price) * int(self.quantity))

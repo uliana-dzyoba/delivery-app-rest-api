@@ -1,7 +1,7 @@
-from rest_framework import generics,status
+from rest_framework import generics, status
+from .models import Order
 
 # Create your views here.
 class OrderListView(generics.ListCreateAPIView):
-    pass
-    # queryset = Note.objects.all().order_by('-updated')
-    # serializer_class = NoteSerializer
+    queryset = Order.objects.all().order_by('-delivery_at')
+    serializer_class = NoteSerializer

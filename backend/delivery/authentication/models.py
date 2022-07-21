@@ -21,10 +21,10 @@ class CustomUserManager(BaseUserManager):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_active', True)
 
-        if not extra_fields.get('is_superuser'):
+        if extra_fields.get('is_superuser') is not True:
             raise ValueError('Superuser must have is_superuser=True')
 
-        if not extra_fields.get('is_staff') is not True:
+        if extra_fields.get('is_staff') is not True:
             raise ValueError('Superuser must have is_staff=True')
 
         return self.create_user(email, password, **extra_fields)
@@ -36,6 +36,7 @@ class User(AbstractUser):
     phone_number = PhoneNumberField(unique=True, null=False, blank=False)
     date_joined = models.DateTimeField('Date', auto_now_add=True)
 
+    objects = CustomUserManager()
 
     REQUIRED_FIELDS = ['username', 'phone_number']
     USERNAME_FIELD = 'email'
