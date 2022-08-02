@@ -70,18 +70,9 @@ class OrderCreateSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         items_data = validated_data.pop('items')
         order = Order.objects.create(**validated_data)
-        # for item_data in items_data:
-        #     try:
-        #         mi_id = item_data.pop('item')
-        #         menu_item = MenuItem.objects.get(id=mi_id)
-        #     except MenuItem.DoesNotExist:
-        #         # We have no object! Do something...
-        #         pass
-        #     OrderItem.objects.create(item = menu_item, order=order, **item_data)
         for item_data in items_data:
             try:
                 menu_item = item_data.pop('item')
-                print(menu_item)
             except MenuItem.DoesNotExist:
                 # We have no object! Do something...
                 pass

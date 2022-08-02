@@ -28,7 +28,7 @@ class Order(models.Model):
     address = models.CharField(max_length=100)
 
     def __str__(self):
-        return f"<Order to be delivered for {self.user} to {self.address}>"
+        return f"<Order to be delivered for {self.customer} to {self.address}>"
 
 class OrderItem(models.Model):
     item = models.ForeignKey(MenuItem, on_delete=models.CASCADE)
