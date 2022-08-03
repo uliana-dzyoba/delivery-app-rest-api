@@ -75,6 +75,6 @@ class OrderCreateSerializer(serializers.ModelSerializer):
                 menu_item = item_data.pop('item')
             except MenuItem.DoesNotExist:
                 # We have no object! Do something...
-                pass
-            OrderItem.objects.create(item = menu_item, order=order, **item_data)
+                return None
+            OrderItem.objects.create(item=menu_item, order=order, **item_data)
         return order

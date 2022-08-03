@@ -29,13 +29,16 @@ class OrderDetailStatusView(UserQuerySetMixin, generics.RetrieveUpdateDestroyAPI
         kwargs['partial'] = True
         return self.update(request, *args, **kwargs)
 
-    # def patch(self, request, pk):
-    #     testmodel_object = self.get_object(pk)
-    #     serializer = TestModelSerializer(testmodel_object, data=request.data, partial=True)  # set partial=True to update a data partially
-    #     if serializer.is_valid():
-    #         serializer.save()
-    #         return JsonResponse(code=201, data=serializer.data)
-    #     return JsonResponse(code=400, data="wrong parameters")
+
+class UserOrdersListView(generics.ListAPIView):
+    permission_classes = [IsAdminUser]
+    queryset = Order.objects.all().order_by('-delivery_at')
+    serializer_class = OrderSerializer
+
+    def get_queryset(self):
+        if self.kwargs.get('user_pk'):
+            return self.queryset.filter(customer=self.kwargs.get('user_pk'))
+        return self.queryset.all()
 
 
 class MenuItemListView(generics.ListCreateAPIView):
