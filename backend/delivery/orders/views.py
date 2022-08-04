@@ -1,3 +1,4 @@
+from django.shortcuts import render,get_object_or_404
 from rest_framework.permissions import IsAuthenticated,IsAdminUser
 from rest_framework import generics, status
 from .models import Order, MenuItem
@@ -20,7 +21,7 @@ class OrderListCreateView(UserQuerySetMixin, generics.ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save(customer=self.request.user)
 
-class OrderDetailStatusView(UserQuerySetMixin, generics.RetrieveUpdateDestroyAPIView):
+class OrderDetailStatusDeleteView(UserQuerySetMixin, generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated, IsOwnerPermission]
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
@@ -39,6 +40,17 @@ class UserOrdersListView(generics.ListAPIView):
         if self.kwargs.get('user_pk'):
             return self.queryset.filter(customer=self.kwargs.get('user_pk'))
         return self.queryset.all()
+
+
+class UserOrderDetailUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAdminUser]
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+
+    def get_object(self):
+        if self.kwargs.get('user_pk'):
+            return get_object_or_404(self.get_queryset(), customer=self.kwargs.get('user_pk'), pk=self.kwargs.get('order_pk'))
+        return get_object_or_404(self.get_queryset(), pk=self.kwargs.get('order_pk'))
 
 
 class MenuItemListView(generics.ListCreateAPIView):

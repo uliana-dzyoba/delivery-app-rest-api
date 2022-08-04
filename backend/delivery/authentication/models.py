@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.base_user import BaseUserManager
@@ -33,12 +34,12 @@ class CustomUserManager(BaseUserManager):
 class User(AbstractUser):
     username = models.CharField('Username', max_length=40, unique=True)
     email = models.EmailField('Email', max_length=80, unique=True)
-    phone_number = PhoneNumberField(unique=True, null=False, blank=False)
-    date_joined = models.DateTimeField('Date', auto_now_add=True)
+    phone_number = PhoneNumberField(unique=True, null=True, blank=True)
+    date_joined = models.DateTimeField('Date', default=timezone.now)
 
     objects = CustomUserManager()
 
-    REQUIRED_FIELDS = ['username', 'phone_number']
+    REQUIRED_FIELDS = ['username']
     USERNAME_FIELD = 'email'
 
     def __str__(self):
