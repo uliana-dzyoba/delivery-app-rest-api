@@ -31,17 +31,20 @@ class OrderItemPublicSerializer(serializers.ModelSerializer):
     def get_name(self, obj):
         return obj.item.name
 
+class OrderItemInlineSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrderItem
+        fields = ['name']
 
 class OrderSerializer(serializers.ModelSerializer):
-    # customer = UserPublicSerializer(source='user', read_only=True)
-    customer = UserPublicSerializer(read_only=True)
+    # customer = UserPublicSerializer(read_only=True)
     items = OrderItemPublicSerializer(many=True, read_only=True)
     total = serializers.SerializerMethodField(read_only=True)
     class Meta:
         model = Order
         fields = [
             'order_status',
-            'customer',
+            # 'customer',
             'delivery_at',
             'address',
             'items',
@@ -54,6 +57,13 @@ class OrderSerializer(serializers.ModelSerializer):
         for order_item in order_items:
             sum += float(order_item.item.price) * int(order_item.quantity)
         return "%.2f" % sum
+
+
+class OrderCustomerSerializer(OrderSerializer):
+    customer = UserPublicSerializer(read_only=True)
+    class Meta:
+        model = Order
+        fields = OrderSerializer.Meta.fields + ['customer']
 
 
 class OrderCreateSerializer(serializers.ModelSerializer):

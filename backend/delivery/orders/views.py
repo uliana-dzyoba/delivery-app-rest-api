@@ -2,7 +2,7 @@ from django.shortcuts import render,get_object_or_404
 from rest_framework.permissions import IsAuthenticated,IsAdminUser
 from rest_framework import generics, status
 from .models import Order, MenuItem
-from .serializers import OrderSerializer, MenuItemSerializer, OrderCreateSerializer
+from .serializers import OrderSerializer, MenuItemSerializer, OrderCreateSerializer, OrderCustomerSerializer
 from authentication.mixins import UserQuerySetMixin
 from authentication.permissions import IsOwnerPermission
 
@@ -15,8 +15,9 @@ class OrderListCreateView(UserQuerySetMixin, generics.ListCreateAPIView):
     def get_serializer_class(self):
         if self.request.method == 'POST':
             return OrderCreateSerializer
-        else:
-            return self.serializer_class
+        elif self.request.user.is_staff:
+            return OrderCustomerSerializer
+        return self.serializer_class
 
     def perform_create(self, serializer):
         serializer.save(customer=self.request.user)
@@ -24,17 +25,19 @@ class OrderListCreateView(UserQuerySetMixin, generics.ListCreateAPIView):
 class OrderDetailStatusDeleteView(UserQuerySetMixin, generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated, IsOwnerPermission]
     queryset = Order.objects.all()
-    serializer_class = OrderSerializer
+    serializer_class = OrderCustomerSerializer
 
     def partial_update(self, request, *args, **kwargs):
         kwargs['partial'] = True
         return self.update(request, *args, **kwargs)
 
 
+
+
 class UserOrdersListView(generics.ListAPIView):
     permission_classes = [IsAdminUser]
     queryset = Order.objects.all().order_by('-delivery_at')
-    serializer_class = OrderSerializer
+    serializer_class = OrderCustomerSerializer
 
     def get_queryset(self):
         if self.kwargs.get('user_pk'):
@@ -45,7 +48,7 @@ class UserOrdersListView(generics.ListAPIView):
 class UserOrderDetailUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAdminUser]
     queryset = Order.objects.all()
-    serializer_class = OrderSerializer
+    serializer_class = OrderCustomerSerializer
 
     def get_object(self):
         if self.kwargs.get('user_pk'):
