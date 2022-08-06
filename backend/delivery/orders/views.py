@@ -24,7 +24,7 @@ class OrderListCreateView(UserQuerySetMixin, generics.ListCreateAPIView):
 
 class OrderDetailStatusDeleteView(UserQuerySetMixin, generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated, IsOwnerPermission]
-    queryset = Order.objects.all()
+    # queryset = Order.objects.all()
     serializer_class = OrderCustomerSerializer
 
     def partial_update(self, request, *args, **kwargs):

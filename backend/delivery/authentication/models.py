@@ -35,6 +35,7 @@ class User(AbstractUser):
     username = models.CharField('Username', max_length=40, unique=True)
     email = models.EmailField('Email', max_length=80, unique=True)
     phone_number = PhoneNumberField(unique=True, null=True, blank=True)
+    address = models.CharField(max_length=100, null=True, blank=True)
     date_joined = models.DateTimeField('Date', default=timezone.now)
 
     objects = CustomUserManager()

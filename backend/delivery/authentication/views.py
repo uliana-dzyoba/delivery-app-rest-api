@@ -1,7 +1,9 @@
 from rest_framework import generics
 from .models import User
-from .serializers import UserSerializer
+from rest_framework.permissions import AllowAny
+from .serializers import UserSignUpSerializer
 
 # Create your views here.
-class UserCreateView(generics.CreateAPIView):
-    serializer_class = UserSerializer
+class UserSignUpView(generics.CreateAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = UserSignUpSerializer
