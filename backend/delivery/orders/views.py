@@ -1,12 +1,14 @@
-from django.shortcuts import render,get_object_or_404
-from rest_framework.permissions import IsAuthenticated,IsAdminUser
-from rest_framework import generics, status
+from django.shortcuts import get_object_or_404
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework import generics
 from .models import Order, MenuItem
 from .serializers import OrderSerializer, MenuItemSerializer, OrderCreateSerializer, OrderCustomerSerializer
 from authentication.mixins import UserQuerySetMixin
 from authentication.permissions import IsOwnerPermission
 
+
 # Create your views here.
+
 class OrderListCreateView(UserQuerySetMixin, generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
     queryset = Order.objects.all().order_by('-delivery_at')
@@ -22,16 +24,15 @@ class OrderListCreateView(UserQuerySetMixin, generics.ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save(customer=self.request.user)
 
-class OrderDetailStatusDeleteView(UserQuerySetMixin, generics.RetrieveUpdateDestroyAPIView):
+
+class OrderDetailStatusDeleteView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated, IsOwnerPermission]
-    # queryset = Order.objects.all()
+    queryset = Order.objects.all()
     serializer_class = OrderCustomerSerializer
 
     def partial_update(self, request, *args, **kwargs):
         kwargs['partial'] = True
         return self.update(request, *args, **kwargs)
-
-
 
 
 class UserOrdersListView(generics.ListAPIView):
