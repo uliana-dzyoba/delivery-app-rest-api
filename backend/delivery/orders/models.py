@@ -29,8 +29,7 @@ class Order(models.Model):
     )
 
     order_status = models.CharField(max_length=25, choices=ORDER_STATUSES, default='PENDING')
-    # user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    customer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)#
+    customer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     delivery_at = models.DateTimeField(default=timezone.now)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

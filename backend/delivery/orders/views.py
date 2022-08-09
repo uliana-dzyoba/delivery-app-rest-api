@@ -57,6 +57,19 @@ class UserOrderDetailUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
         return get_object_or_404(self.get_queryset(), pk=self.kwargs.get('order_pk'))
 
 
-class MenuItemListView(generics.ListCreateAPIView):
-    queryset = MenuItem.objects.all().order_by('name')
+class MenuItemPublicListView(generics.ListAPIView):
+    queryset = MenuItem.objects.all()
     serializer_class = MenuItemSerializer
+
+    def get_queryset(self):
+        qs1 = MenuItem.objects.filter(category='AP')
+        qs2 = [MenuItem.objects.filter(category='SP'), MenuItem.objects.filter(category='SL'), MenuItem.objects.filter(category='DS'),
+               MenuItem.objects.filter(category='DR'), MenuItem.objects.filter(category='OT')]
+
+        qs = qs1.union(*qs2)
+        return qs
+
+
+# class MenuItemListView(generics.ListCreateAPIView):
+#     queryset = MenuItem.objects.all().order_by('name')
+#     serializer_class = MenuItemSerializer
