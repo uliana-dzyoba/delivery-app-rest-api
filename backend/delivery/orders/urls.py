@@ -2,7 +2,8 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('menu/',views.MenuItemPublicListView.as_view(),name='menu'),
+    path('menu/', views.MenuItemPublicListView.as_view(),name='menu'),
+    path('menu/<int:pk>/', views.MenuItemPublicListView.as_view(),name='menu_item'),
     path('orders/',views.OrderListCreateView.as_view(),name='orders'),
     path('orders/<int:pk>/', views.OrderDetailStatusDeleteView.as_view(), name='order'),
     path('users/<int:user_pk>/orders/', views.UserOrdersListView.as_view(), name='user_orders_list'),

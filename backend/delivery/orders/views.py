@@ -4,7 +4,7 @@ from rest_framework import generics
 from .models import Order, MenuItem
 from .serializers import OrderSerializer, MenuItemSerializer, OrderCreateSerializer, OrderCustomerSerializer
 from authentication.mixins import UserQuerySetMixin
-from authentication.permissions import IsOwnerPermission
+from authentication.permissions import IsOwnerPermission, IsAdminOrReadOnly
 
 
 # Create your views here.
@@ -57,7 +57,8 @@ class UserOrderDetailUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
         return get_object_or_404(self.get_queryset(), pk=self.kwargs.get('order_pk'))
 
 
-class MenuItemPublicListView(generics.ListAPIView):
+class MenuItemPublicListView(generics.ListCreateAPIView):
+    permission_classes = [IsAdminOrReadOnly]
     queryset = MenuItem.objects.all()
     serializer_class = MenuItemSerializer
 
@@ -70,6 +71,7 @@ class MenuItemPublicListView(generics.ListAPIView):
         return qs
 
 
-# class MenuItemListView(generics.ListCreateAPIView):
-#     queryset = MenuItem.objects.all().order_by('name')
-#     serializer_class = MenuItemSerializer
+class MenuItemUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAdminOrReadOnly]
+    queryset = Order.objects.all()
+    serializer_class = MenuItemSerializer
