@@ -88,3 +88,9 @@ class OrderCreateSerializer(serializers.ModelSerializer):
                 return None
             OrderItem.objects.create(item=menu_item, order=order, **item_data)
         return order
+
+
+class OrderAdminCreateSerializer(OrderCreateSerializer):
+    class Meta:
+        model = Order
+        fields = OrderCreateSerializer.Meta.fields + ['customer']

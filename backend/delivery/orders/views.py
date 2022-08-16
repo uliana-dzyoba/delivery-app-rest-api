@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework import generics
 from .models import Order, MenuItem
-from .serializers import OrderSerializer, MenuItemSerializer, OrderCreateSerializer, OrderCustomerSerializer
+from .serializers import OrderSerializer, MenuItemSerializer, OrderCreateSerializer, OrderCustomerSerializer, OrderAdminCreateSerializer
 from authentication.mixins import UserQuerySetMixin
 from authentication.permissions import IsOwnerPermission, IsAdminOrReadOnly
 
@@ -16,13 +16,18 @@ class OrderListCreateView(UserQuerySetMixin, generics.ListCreateAPIView):
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
+            if self.request.user.is_staff:
+                return OrderAdminCreateSerializer
             return OrderCreateSerializer
         elif self.request.user.is_staff:
             return OrderCustomerSerializer
         return self.serializer_class
 
     def perform_create(self, serializer):
-        serializer.save(customer=self.request.user)
+        if not self.request.user.is_staff:
+            serializer.save(customer=self.request.user)
+        serializer.save()
+
 
 
 class OrderDetailStatusDeleteView(generics.RetrieveUpdateDestroyAPIView):
@@ -35,10 +40,23 @@ class OrderDetailStatusDeleteView(generics.RetrieveUpdateDestroyAPIView):
         return self.update(request, *args, **kwargs)
 
 
-class UserOrdersListView(generics.ListAPIView):
+class UserOrdersListCreateView(generics.ListCreateAPIView):
     permission_classes = [IsAdminUser]
     queryset = Order.objects.all().order_by('-delivery_at')
     serializer_class = OrderCustomerSerializer
+
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return OrderAdminCreateSerializer
+        return self.serializer_class
+
+    def get_serializer(self, *args, **kwargs):
+        serializer_class = self.get_serializer_class()
+        kwargs["context"] = self.get_serializer_context()
+        draft_request_data = self.request.data.copy()
+        draft_request_data["customer"] = self.kwargs.get('user_pk')
+        kwargs["data"] = draft_request_data
+        return serializer_class(*args, **kwargs)
 
     def get_queryset(self):
         if self.kwargs.get('user_pk'):
