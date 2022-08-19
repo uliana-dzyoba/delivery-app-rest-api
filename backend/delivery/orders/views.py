@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework import generics
+from django.db.models import Value
 from .models import Order, MenuItem
 from .serializers import OrderSerializer, MenuItemSerializer, OrderCreateSerializer, OrderCustomerSerializer, OrderAdminCreateSerializer
 from authentication.mixins import UserQuerySetMixin
@@ -81,11 +82,14 @@ class MenuItemPublicListView(generics.ListCreateAPIView):
     serializer_class = MenuItemSerializer
 
     def get_queryset(self):
-        qs1 = MenuItem.objects.filter(category='AP')
-        qs2 = [MenuItem.objects.filter(category='SP'), MenuItem.objects.filter(category='SL'), MenuItem.objects.filter(category='DS'),
-               MenuItem.objects.filter(category='DR'), MenuItem.objects.filter(category='OT')]
+        qs1 = MenuItem.objects.filter(category='AP').annotate(custom_order=Value(1))
+        qs2 = [MenuItem.objects.filter(category='SP').annotate(custom_order=Value(2)),
+               MenuItem.objects.filter(category='SL').annotate(custom_order=Value(3)),
+               MenuItem.objects.filter(category='DS').annotate(custom_order=Value(4)),
+               MenuItem.objects.filter(category='DR').annotate(custom_order=Value(5)),
+               MenuItem.objects.filter(category='OT').annotate(custom_order=Value(6))]
 
-        qs = qs1.union(*qs2)
+        qs = qs1.union(*qs2).order_by('custom_order')
         return qs
 
 
