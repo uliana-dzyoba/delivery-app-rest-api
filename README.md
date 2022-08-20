@@ -1,4 +1,4 @@
-# delivery-app-rest-api
+# Restaurant Delivery App
 
 ![screenshot](https://github.com/uliana-dzyoba/delivery-app-rest-api/blob/main/screen.png?raw=true)
 
