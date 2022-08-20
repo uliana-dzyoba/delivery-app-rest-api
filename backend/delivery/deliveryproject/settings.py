@@ -66,13 +66,14 @@ SIMPLE_JWT = {
 }
 
 SWAGGER_SETTINGS = {
-   'SECURITY_DEFINITIONS': {
+    'SECURITY_DEFINITIONS': {
       'Bearer': {
         'type': 'apiKey',
         'name': 'Authorization',
         'in': 'header'
       }
-   }
+   },
+    'USE_SESSION_AUTH': False
 }
 
 MIDDLEWARE = [
@@ -110,16 +111,6 @@ WSGI_APPLICATION = 'deliveryproject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'deliveryapp',
-#         'USER': 'postgres',
-#         'PASSWORD': '28012001',
-#         'HOST': 'localhost',
-#         'PORT': '5432',
-#     }
-# }
 
 DATABASES = {}
 
