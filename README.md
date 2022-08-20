@@ -2,7 +2,7 @@
 
 ![screenshot](https://github.com/uliana-dzyoba/delivery-app-rest-api/blob/main/screen.png?raw=true)
 
-In this project I have mastered:
+#### In this project I have mastered:
 * designing REST API with Django Rest Framework
 * using complex DRF serializers
 * integrating JWT authentication
