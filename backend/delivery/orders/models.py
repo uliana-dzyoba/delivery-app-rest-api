@@ -21,6 +21,7 @@ class MenuItem(models.Model):
     def __str__(self):
         return self.name
 
+
 class Order(models.Model):
     ORDER_STATUSES = (
         ('PENDING', 'Pending'),
@@ -37,6 +38,7 @@ class Order(models.Model):
 
     def __str__(self):
         return f"<Order to be delivered for {self.customer} to {self.address}>"
+
 
 class OrderItem(models.Model):
     item = models.ForeignKey(MenuItem, on_delete=models.CASCADE)

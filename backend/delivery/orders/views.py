@@ -3,7 +3,8 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework import generics
 from django.db.models import Value
 from .models import Order, MenuItem
-from .serializers import OrderSerializer, MenuItemSerializer, OrderCreateSerializer, OrderCustomerSerializer, OrderAdminCreateSerializer
+from .serializers import OrderSerializer, MenuItemSerializer, OrderCreateSerializer,\
+    OrderCustomerSerializer, OrderAdminCreateSerializer
 from authentication.mixins import UserQuerySetMixin
 from authentication.permissions import IsOwnerPermission, IsAdminOrReadOnly
 
@@ -20,15 +21,16 @@ class OrderListCreateView(UserQuerySetMixin, generics.ListCreateAPIView):
             if self.request.user.is_staff:
                 return OrderAdminCreateSerializer
             return OrderCreateSerializer
+        # for the staff the customer of the order is shown
         elif self.request.user.is_staff:
             return OrderCustomerSerializer
         return self.serializer_class
 
     def perform_create(self, serializer):
+        # if order is created by admin they need to specify the user
         if not self.request.user.is_staff:
             serializer.save(customer=self.request.user)
         serializer.save()
-
 
 
 class OrderDetailStatusDeleteView(generics.RetrieveUpdateDestroyAPIView):
@@ -36,11 +38,13 @@ class OrderDetailStatusDeleteView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Order.objects.all()
     serializer_class = OrderCustomerSerializer
 
+    # for updating the order status PATCH method is used
     def partial_update(self, request, *args, **kwargs):
         kwargs['partial'] = True
         return self.update(request, *args, **kwargs)
 
 
+# view specifically for staff only
 class UserOrdersListCreateView(generics.ListCreateAPIView):
     permission_classes = [IsAdminUser]
     queryset = Order.objects.all().order_by('-delivery_at')
@@ -51,6 +55,7 @@ class UserOrdersListCreateView(generics.ListCreateAPIView):
             return OrderAdminCreateSerializer
         return self.serializer_class
 
+    # set customer from user_pk
     def get_serializer(self, *args, **kwargs):
         serializer_class = self.get_serializer_class()
         kwargs["context"] = self.get_serializer_context()
@@ -65,6 +70,7 @@ class UserOrdersListCreateView(generics.ListCreateAPIView):
         return self.queryset.all()
 
 
+# view specifically for staff only
 class UserOrderDetailUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAdminUser]
     queryset = Order.objects.all()
@@ -72,7 +78,8 @@ class UserOrderDetailUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_object(self):
         if self.kwargs.get('user_pk'):
-            return get_object_or_404(self.get_queryset(), customer=self.kwargs.get('user_pk'), pk=self.kwargs.get('order_pk'))
+            return get_object_or_404(self.get_queryset(), customer=self.kwargs.get('user_pk'),
+                                     pk=self.kwargs.get('order_pk'))
         return get_object_or_404(self.get_queryset(), pk=self.kwargs.get('order_pk'))
 
 

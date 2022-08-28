@@ -5,6 +5,7 @@ from .models import Order, MenuItem
 
 admin.site.register(MenuItem)
 
+
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     list_display=['id', 'customer', 'order_status', 'delivery_at', 'address']

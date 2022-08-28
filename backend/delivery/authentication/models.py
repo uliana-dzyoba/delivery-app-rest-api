@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.base_user import BaseUserManager
 from phonenumber_field.modelfields import PhoneNumberField
 
+
 # Create your models here.
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password, **extra_fields):
@@ -15,7 +16,6 @@ class CustomUserManager(BaseUserManager):
         new_user.set_password(password)
         new_user.save()
         return new_user
-
 
     def create_superuser(self, email, password, **extra_fields):
         extra_fields.setdefault('is_superuser', True)
