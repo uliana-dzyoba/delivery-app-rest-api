@@ -5,16 +5,18 @@ from django.db.models import Value
 from .models import Order, MenuItem
 from .serializers import OrderSerializer, MenuItemSerializer, OrderCreateSerializer,\
     OrderCustomerSerializer, OrderAdminCreateSerializer
+from .mixins import OrderStatusDateFilterMixin
 from authentication.mixins import UserQuerySetMixin
 from authentication.permissions import IsOwnerPermission, IsAdminOrReadOnly
 
 
 # Create your views here.
 
-class OrderListCreateView(UserQuerySetMixin, generics.ListCreateAPIView):
+class OrderListCreateView(OrderStatusDateFilterMixin, UserQuerySetMixin, generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
     queryset = Order.objects.all().order_by('-delivery_at')
     serializer_class = OrderSerializer
+
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
@@ -45,7 +47,7 @@ class OrderDetailStatusDeleteView(generics.RetrieveUpdateDestroyAPIView):
 
 
 # view specifically for staff only
-class UserOrdersListCreateView(generics.ListCreateAPIView):
+class UserOrdersListCreateView(OrderStatusDateFilterMixin, generics.ListCreateAPIView):
     permission_classes = [IsAdminUser]
     queryset = Order.objects.all().order_by('-delivery_at')
     serializer_class = OrderCustomerSerializer
@@ -81,6 +83,7 @@ class UserOrderDetailUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
             return get_object_or_404(self.get_queryset(), customer=self.kwargs.get('user_pk'),
                                      pk=self.kwargs.get('order_pk'))
         return get_object_or_404(self.get_queryset(), pk=self.kwargs.get('order_pk'))
+
 
 
 class MenuItemPublicListView(generics.ListCreateAPIView):

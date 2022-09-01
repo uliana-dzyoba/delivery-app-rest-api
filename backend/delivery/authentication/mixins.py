@@ -1,4 +1,4 @@
-class UserQuerySetMixin():
+class UserQuerySetMixin(object):
     # mixin for query of a current user
     user_field = 'customer'
     allow_staff_view = True
@@ -10,3 +10,5 @@ class UserQuerySetMixin():
         if self.allow_staff_view and user.is_staff:
             return qs
         return qs.filter(**lookup_data)
+
+

@@ -68,7 +68,7 @@ class OrderCustomerSerializer(OrderSerializer):
 
     class Meta:
         model = Order
-        fields = OrderSerializer.Meta.fields + ['customer']
+        fields = OrderSerializer.Meta.fields + ['id', 'customer']
 
 
 class OrderCreateSerializer(serializers.ModelSerializer):
