@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404
+from django.utils.decorators import method_decorator
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework import generics
 from django.db.models import Value
@@ -7,16 +8,25 @@ from .serializers import OrderSerializer, MenuItemSerializer, OrderCreateSeriali
     OrderCustomerSerializer, OrderAdminCreateSerializer
 from .mixins import OrderStatusDateFilterMixin
 from authentication.mixins import UserQuerySetMixin
-from authentication.permissions import IsOwnerPermission, IsAdminOrReadOnly
+from authentication.permissions import IsAdminOrIsOwnerReadOnly, IsAdminOrReadOnly
+
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 
 
 # Create your views here.
+
+# for swagger
+status_param = openapi.Parameter('status', openapi.IN_QUERY, description="Order status in lowercase", type=openapi.TYPE_STRING)
+date_param = openapi.Parameter('date', openapi.IN_QUERY, description="A date in format YYYY-MM-DD", type=openapi.TYPE_STRING)
+start_date_param = openapi.Parameter('from', openapi.IN_QUERY, description="Start date in format YYYY-MM-DD", type=openapi.TYPE_STRING)
+end_date_param = openapi.Parameter('to', openapi.IN_QUERY, description="End date in format YYYY-MM-DD", type=openapi.TYPE_STRING)
+
 
 class OrderListCreateView(OrderStatusDateFilterMixin, UserQuerySetMixin, generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
     queryset = Order.objects.all().order_by('-delivery_at')
     serializer_class = OrderSerializer
-
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
@@ -34,16 +44,18 @@ class OrderListCreateView(OrderStatusDateFilterMixin, UserQuerySetMixin, generic
             serializer.save(customer=self.request.user)
         serializer.save()
 
+    # for swagger
+    @method_decorator(decorator=swagger_auto_schema(
+        manual_parameters=[status_param, date_param, start_date_param, end_date_param]
+    ))
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
 
-class OrderDetailStatusDeleteView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [IsAuthenticated, IsOwnerPermission]
+
+class OrderDetailUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated, IsAdminOrIsOwnerReadOnly]
     queryset = Order.objects.all()
     serializer_class = OrderCustomerSerializer
-
-    # for updating the order status PATCH method is used
-    def partial_update(self, request, *args, **kwargs):
-        kwargs['partial'] = True
-        return self.update(request, *args, **kwargs)
 
 
 # view specifically for staff only
@@ -71,6 +83,13 @@ class UserOrdersListCreateView(OrderStatusDateFilterMixin, generics.ListCreateAP
             return self.queryset.filter(customer=self.kwargs.get('user_pk'))
         return self.queryset.all()
 
+    # for swagger
+    @method_decorator(decorator=swagger_auto_schema(
+        manual_parameters=[status_param, date_param, start_date_param, end_date_param]
+    ))
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
 
 # view specifically for staff only
 class UserOrderDetailUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
@@ -83,7 +102,6 @@ class UserOrderDetailUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
             return get_object_or_404(self.get_queryset(), customer=self.kwargs.get('user_pk'),
                                      pk=self.kwargs.get('order_pk'))
         return get_object_or_404(self.get_queryset(), pk=self.kwargs.get('order_pk'))
-
 
 
 class MenuItemPublicListView(generics.ListCreateAPIView):

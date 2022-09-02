@@ -4,7 +4,7 @@ REST API for the backend part of a Food Delivery App
 
 [API described in Swagger UI](https://delivery-app-drf.herokuapp.com/docs/)
 
-![screenshot](https://github.com/uliana-dzyoba/delivery-app-rest-api/blob/main/screen2.png?raw=true)
+![screenshot](https://github.com/uliana-dzyoba/delivery-app-rest-api/blob/main/screen.png?raw=true)
 
 #### In this project I have mastered:
 * designing REST API with Django Rest Framework
