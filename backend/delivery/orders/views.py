@@ -72,10 +72,11 @@ class UserOrdersListCreateView(OrderStatusDateFilterMixin, generics.ListCreateAP
     # set customer from user_pk
     def get_serializer(self, *args, **kwargs):
         serializer_class = self.get_serializer_class()
-        kwargs["context"] = self.get_serializer_context()
-        draft_request_data = self.request.data.copy()
-        draft_request_data["customer"] = self.kwargs.get('user_pk')
-        kwargs["data"] = draft_request_data
+        if self.request.method == 'POST':
+            kwargs["context"] = self.get_serializer_context()
+            draft_request_data = self.request.data.copy()
+            draft_request_data["customer"] = self.kwargs.get('user_pk')
+            kwargs["data"] = draft_request_data
         return serializer_class(*args, **kwargs)
 
     def get_queryset(self):
