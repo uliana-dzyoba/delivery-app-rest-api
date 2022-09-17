@@ -13,8 +13,8 @@ REST API for the backend part of a Food Delivery App
 #### In this project I have mastered:
 * designing REST API with Django Rest Framework
 * using complex DRF serializers
-* filtering Django querysets
-* integrating JWT authentication
+* filtering Django querysets with mixins
+* applying djoser for JWT authentication
 
 ### Database Diagram
 ![er](https://github.com/uliana-dzyoba/delivery-app-rest-api/blob/main/deliveryapp%20-%20public%20-%20orders_order.png?raw=true)
