@@ -22,4 +22,3 @@ class UserDetailDeleteView(generics.RetrieveDestroyAPIView):
     permission_classes = [IsAdminUser]
     queryset = get_user_model().objects.all()
     serializer_class = UserSerializer
-

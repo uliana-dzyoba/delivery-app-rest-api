@@ -9,6 +9,7 @@ class MenuItemSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+# serializer used in order creation
 class OrderItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrderItem
@@ -16,6 +17,7 @@ class OrderItemSerializer(serializers.ModelSerializer):
         read_only_fields = ('order',)
 
 
+# serializer used to view orderitem in order
 class OrderItemPublicSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField(read_only=True)
     subtotal = serializers.SerializerMethodField(read_only=True)
@@ -35,12 +37,7 @@ class OrderItemPublicSerializer(serializers.ModelSerializer):
         return obj.item.name
 
 
-class OrderItemInlineSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = OrderItem
-        fields = ['name']
-
-
+# basic view order serializer
 class OrderSerializer(serializers.ModelSerializer):
     items = OrderItemPublicSerializer(many=True, read_only=True)
     total = serializers.SerializerMethodField(read_only=True)
@@ -72,6 +69,11 @@ class OrderCustomerSerializer(OrderSerializer):
 
 
 class OrderCreateSerializer(serializers.ModelSerializer):
+    # example:
+    # {
+    #     "items": [{"item": 1, "quantity": 2}],
+    #     "address": "Adr.Str."
+    # }
     items = OrderItemSerializer(many=True)
 
     class Meta:
