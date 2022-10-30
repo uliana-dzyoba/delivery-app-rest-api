@@ -3,12 +3,13 @@ from django.utils.decorators import method_decorator
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework import generics
 from django.db.models import Value
+
+from authentication.mixins import UserQuerySetMixin
+from authentication.permissions import IsAdminOrIsOwnerReadOnly, IsAdminOrReadOnly
 from .models import Order, MenuItem
 from .serializers import OrderSerializer, MenuItemSerializer, OrderCreateSerializer,\
     OrderCustomerSerializer, OrderAdminCreateSerializer
 from .mixins import OrderStatusDateFilterMixin
-from authentication.mixins import UserQuerySetMixin
-from authentication.permissions import IsAdminOrIsOwnerReadOnly, IsAdminOrReadOnly
 
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
@@ -105,7 +106,7 @@ class UserOrderDetailUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
         return get_object_or_404(self.get_queryset(), pk=self.kwargs.get('order_pk'))
 
 
-class MenuItemPublicListView(generics.ListCreateAPIView):
+class MenuItemPublicListCreateView(generics.ListCreateAPIView):
     permission_classes = [IsAdminOrReadOnly]
     queryset = MenuItem.objects.all()
     serializer_class = MenuItemSerializer
@@ -122,7 +123,7 @@ class MenuItemPublicListView(generics.ListCreateAPIView):
         return qs
 
 
-class MenuItemUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
+class MenuItemDetailUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAdminOrReadOnly]
     queryset = Order.objects.all()
     serializer_class = MenuItemSerializer
