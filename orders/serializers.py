@@ -32,7 +32,7 @@ class OrderItemPublicSerializer(serializers.ModelSerializer):
         ]
 
     def get_subtotal(self, obj):
-        return "%.2f" % (float(obj.item.price) * int(obj.quantity))
+        return f'{(obj.item.price * obj.quantity):.2f}'
 
     def get_name(self, obj):
         return obj.item.name
@@ -54,11 +54,8 @@ class OrderSerializer(serializers.ModelSerializer):
         ]
 
     def get_total(self, obj):
-        total_sum = 0
-        order_items = obj.items.all()
-        for order_item in order_items:
-            total_sum += float(order_item.item.price) * int(order_item.quantity)
-        return "%.2f" % total_sum
+        total_sum = sum([order_item.item.price * order_item.quantity for order_item in obj.items.all()])
+        return f'{total_sum:.2f}'
 
 
 class OrderCustomerSerializer(OrderSerializer):
@@ -92,8 +89,7 @@ class OrderCreateSerializer(serializers.ModelSerializer):
             try:
                 menu_item = item_data.pop('item')
             except MenuItem.DoesNotExist:
-                # We have no object! Do something...
-                return None
+                raise serializers.ValidationError("The menu item does not exist")
             OrderItem.objects.create(item=menu_item, order=order, **item_data)
         return order
 

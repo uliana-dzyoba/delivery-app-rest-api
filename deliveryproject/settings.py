@@ -112,23 +112,7 @@ WSGI_APPLICATION = 'deliveryproject.wsgi.application'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 
-DATABASES = {}
-
-
-if DEBUG:
-    DATABASES["default"] = {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'deliveryapp',
-        'USER': 'postgres',
-        'PASSWORD': '28012001',
-        'HOST': 'localhost',
-        'PORT': '5432',
-
-    }
-else:
-    DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
-    DATABASES['default'] = dj_database_url.config(default=config('DATABASE_URL'))
-
+DATABASES = {'default': dj_database_url.config(default=config('DATABASE_URL'), conn_max_age=600)}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators

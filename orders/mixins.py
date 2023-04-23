@@ -6,7 +6,7 @@ def parameter_to_date(parameter):
     # parameter is in a format "yyyy-mm-dd"
     date_list = [int(x) for x in parameter.split('-')]
     if len(date_list) == 3:
-        date = make_aware(datetime(*date_list))
+        date = make_aware(datetime(*date_list)).date()
     return date
 
 
@@ -21,8 +21,7 @@ class OrderStatusDateFilterMixin(object):
         date = self.request.query_params.get('date')
         if date is not None:
             exact_date = parameter_to_date(date)
-            end_date = exact_date + timedelta(days=1)
-            qs = qs.filter(delivery_at__range=[exact_date, end_date])
+            qs = qs.filter(delivery_at__date=exact_date)
 
         from_date = self.request.query_params.get('from')
         to_date = self.request.query_params.get('to')
