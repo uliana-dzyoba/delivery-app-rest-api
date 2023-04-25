@@ -2,13 +2,15 @@
 
 REST API for the backend part of a Food Delivery App 
 
-[![Django][Django]][Django-url] [![DRF][DRF]][DRF-url] [![PostgreSQL][PostgreSQL]][PostgreSQL-url] [![JWT][JWT]][JWT-url] [![Swagger][Swagger]][Swagger-url]
+[![Django][Django]][Django-url] [![DRF][DRF]][DRF-url] [![PostgreSQL][PostgreSQL]][PostgreSQL-url] [![JWT][JWT]][JWT-url] [![Swagger][Swagger]][Swagger-url] [![Render][Render]][Render-url]
 
-### [API described in Swagger UI](https://delivery-app-drf.herokuapp.com/docs/)
+### [Swagger UI](https://deliveryapp-4nx2.onrender.com/docs/)
 
+![screenshot](https://github.com/uliana-dzyoba/delivery-app-rest-api/blob/main/swagger.png?raw=true)
 
-![screenshot](https://github.com/uliana-dzyoba/delivery-app-rest-api/blob/main/screen.png?raw=true)
-![screenshot](https://github.com/uliana-dzyoba/delivery-app-rest-api/blob/main/screen2.png?raw=true)
+### [ReDoc](https://deliveryapp-4nx2.onrender.com/redoc/)
+
+![screenshot](https://github.com/uliana-dzyoba/delivery-app-rest-api/blob/main/redoc.png?raw=true)
 
 #### In this project I have mastered:
 * designing REST API with Django Rest Framework
@@ -31,5 +33,7 @@ REST API for the backend part of a Food Delivery App
 [PostgreSQL-url]: https://www.postgresql.org/
 [JWT]: 	https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=JSON%20web%20tokens&logoColor=white
 [JWT-url]: https://jwt.io/
-[Swagger]: 	https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=Swagger&logoColor=white
+[Swagger]: https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=Swagger&logoColor=white
 [Swagger-url]: https://swagger.io/
+[Render]: https://img.shields.io/badge/Render-46E3B7?style=for-the-badge&logo=render&logoColor=white
+[Render-url]: https://render.com/
