@@ -6,11 +6,11 @@ REST API for the backend part of a Food Delivery App
 
 ### [Swagger UI](https://deliveryapp-4nx2.onrender.com/docs/)
 
-![screenshot](https://raw.githubusercontent.com/uliana-dzyoba/delivery-app-rest-api/main/swagger.png)
+![screenshot](https://raw.githubusercontent.com/uliana-dzyoba/delivery-app-rest-api/main/images/swagger.png)
 
 ### [ReDoc](https://deliveryapp-4nx2.onrender.com/redoc/)
 
-![screenshot](https://github.com/uliana-dzyoba/delivery-app-rest-api/blob/main/redoc.png?raw=true)
+![screenshot](https://raw.githubusercontent.com/uliana-dzyoba/delivery-app-rest-api/main/images/redoc.png)
 
 #### In this project I have mastered:
 * designing REST API with Django Rest Framework
@@ -19,10 +19,10 @@ REST API for the backend part of a Food Delivery App
 * applying djoser for JWT authentication
 
 ### Database Diagram
-![er](https://github.com/uliana-dzyoba/delivery-app-rest-api/blob/main/deliveryapp%20-%20public%20-%20orders_order.png?raw=true)
+![er](https://raw.githubusercontent.com/uliana-dzyoba/delivery-app-rest-api/main/images/er.png)
 
 ### Use Case Diagram
-![usecases](https://github.com/uliana-dzyoba/delivery-app-rest-api/blob/main/use%20case.drawio.png?raw=true)
+![usecases](https://raw.githubusercontent.com/uliana-dzyoba/delivery-app-rest-api/main/images/use%20case.drawio.png)
 
 
 [Django]: https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=green
