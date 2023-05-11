@@ -33,10 +33,11 @@ class Order(models.Model):
     PENDING = 'PENDING'
     IN_TRANSIT = 'IN_TRANSIT'
     DELIVERED = 'DELIVERED'
+
     ORDER_STATUSES = (
-        ('PENDING', 'Pending'),
-        ('IN_TRANSIT', 'In transit'),
-        ('DELIVERED', 'Delivered')
+        (PENDING, 'Pending'),
+        (IN_TRANSIT, 'In transit'),
+        (DELIVERED, 'Delivered')
     )
 
     order_status = models.CharField(max_length=25, choices=ORDER_STATUSES, default=PENDING)

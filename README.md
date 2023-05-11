@@ -6,7 +6,7 @@ REST API for the backend part of a Food Delivery App
 
 ### [Swagger UI](https://deliveryapp-4nx2.onrender.com/docs/)
 
-![screenshot](https://github.com/uliana-dzyoba/delivery-app-rest-api/blob/main/swagger.png?raw=true)
+![screenshot](https://raw.githubusercontent.com/uliana-dzyoba/delivery-app-rest-api/main/swagger.png)
 
 ### [ReDoc](https://deliveryapp-4nx2.onrender.com/redoc/)
 
