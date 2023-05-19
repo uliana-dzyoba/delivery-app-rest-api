@@ -20,8 +20,8 @@ class OrderItemSerializer(serializers.ModelSerializer):
 
 # serializer used to view orderitem in order
 class OrderItemPublicSerializer(serializers.ModelSerializer):
-    name = serializers.SerializerMethodField(read_only=True)
-    subtotal = serializers.SerializerMethodField(read_only=True)
+    name = serializers.SerializerMethodField()
+    subtotal = serializers.SerializerMethodField()
 
     class Meta:
         model = OrderItem
@@ -41,7 +41,7 @@ class OrderItemPublicSerializer(serializers.ModelSerializer):
 # basic view order serializer
 class OrderSerializer(serializers.ModelSerializer):
     items = OrderItemPublicSerializer(many=True, read_only=True)
-    total = serializers.SerializerMethodField(read_only=True)
+    total = serializers.SerializerMethodField()
 
     class Meta:
         model = Order
