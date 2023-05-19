@@ -20,7 +20,7 @@ class OrderItemSerializer(serializers.ModelSerializer):
 
 # serializer used to view orderitem in order
 class OrderItemPublicSerializer(serializers.ModelSerializer):
-    name = serializers.SerializerMethodField()
+    name = serializers.CharField(source='item.name', read_only=True)
     subtotal = serializers.SerializerMethodField()
 
     class Meta:
@@ -33,9 +33,6 @@ class OrderItemPublicSerializer(serializers.ModelSerializer):
 
     def get_subtotal(self, obj):
         return f'{(obj.item.price * obj.quantity):.2f}'
-
-    def get_name(self, obj):
-        return obj.item.name
 
 
 # basic view order serializer
