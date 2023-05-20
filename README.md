@@ -1,8 +1,8 @@
 # Restaurant Delivery App API
 
-REST API for the backend part of a Food Delivery App 
-
 [![Django][Django]][Django-url] [![DRF][DRF]][DRF-url] [![PostgreSQL][PostgreSQL]][PostgreSQL-url] [![JWT][JWT]][JWT-url] [![Swagger][Swagger]][Swagger-url] [![Render][Render]][Render-url]
+
+REST API for the backend part of a Food Delivery App
 
 ### [Swagger UI](https://deliveryapp-4nx2.onrender.com/docs/)
 
