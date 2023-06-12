@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     'phonenumber_field',
 ]
 
-AUTH_USER_MODEL ='authentication.User'
+AUTH_USER_MODEL = 'authentication.User'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -67,12 +67,12 @@ SIMPLE_JWT = {
 
 SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {
-      'Bearer': {
-        'type': 'apiKey',
-        'name': 'Authorization',
-        'in': 'header'
-      }
-   },
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+        }
+    },
     'USE_SESSION_AUTH': False
 }
 

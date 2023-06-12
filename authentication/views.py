@@ -1,6 +1,8 @@
 from rest_framework import generics, filters
 from rest_framework.permissions import AllowAny, IsAdminUser
 from django.contrib.auth import get_user_model
+
+from .permissions import IsAdminOrIsUserReadOnly
 from .serializers import UserSignUpSerializer, UserPublicSerializer, UserSerializer
 
 
@@ -12,13 +14,13 @@ class UserSignUpView(generics.CreateAPIView):
 
 class UserListView(generics.ListAPIView):
     permission_classes = [IsAdminUser]
-    queryset = get_user_model().objects.all()
+    queryset = get_user_model().objects.all().order_by('id')
     serializer_class = UserPublicSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['username', 'email']
 
 
 class UserDetailDeleteView(generics.RetrieveDestroyAPIView):
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAdminOrIsUserReadOnly]
     queryset = get_user_model().objects.all()
     serializer_class = UserSerializer
