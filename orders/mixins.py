@@ -3,15 +3,17 @@ from django.utils.timezone import make_aware
 
 
 def parameter_to_date(parameter):
-    # parameter is in a format "yyyy-mm-dd"
-    date_list = [int(x) for x in parameter.split('-')]
-    if len(date_list) == 3:
-        date = make_aware(datetime(*date_list)).date()
+    # parameter is in a format "dd-mm-yy"
+    # date_list = [int(x) for x in parameter.split('-')]
+    # if len(date_list) == 3:
+    #     date = make_aware(datetime(*date_list)).date()
+    # return date
+    date = make_aware(datetime.strptime(parameter, "%d-%m-%y")).date()
     return date
 
 
+# mixin for filtering by status, specific date and date range
 class OrderStatusDateFilterMixin(object):
-    # mixin for filtering by status, specific date and date range
     def get_queryset(self, *args, **kwargs):
         qs = super().get_queryset(*args, **kwargs)
         status = self.request.query_params.get('status')

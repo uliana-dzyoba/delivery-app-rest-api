@@ -6,6 +6,7 @@ from rest_framework.settings import api_settings
 from rest_framework.test import APITestCase, APIRequestFactory, force_authenticate
 
 from authentication.serializers import UserSerializer, UserPublicSerializer
+from deliveryproject.test_utils import paginate_objects
 
 
 # Create your tests here.
@@ -22,7 +23,6 @@ class TestUserDetailDeleteView(APITestCase):
         serializer = UserSerializer(user)
         self.assertEqual(response.data, serializer.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        users = get_user_model().objects.all()
 
     def test_get_user_auto(self):
         self.client.force_authenticate(user=self.user)
@@ -31,13 +31,11 @@ class TestUserDetailDeleteView(APITestCase):
         serializer = UserSerializer(user)
         self.assertEqual(response.data, serializer.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        users = get_user_model().objects.all()
 
     def test_delete_user(self):
         self.client.force_authenticate(user=self.admin)
         response = self.client.delete(self.url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        users = get_user_model().objects.all()
 
 
 class TestUserListView(APITestCase):
@@ -53,13 +51,13 @@ class TestUserListView(APITestCase):
     def test_list_users(self):
         users = get_user_model().objects.all().order_by('id')
         request = self.factory.get(self.url)
-        request.query_params = {'page': 0}
         force_authenticate(request, user=self.admin)
+        request.query_params = {'page': 0}
         url = self.url
         page_num = 1
         while True:
             request.query_params['page'] = page_num
-            paginated = self.paginate_users(users, request)
+            paginated = paginate_objects(request, self.paginator, users, UserPublicSerializer)
             response = self.client.get(url)
             self.assertEqual(response.data, paginated.data)
             self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -67,13 +65,6 @@ class TestUserListView(APITestCase):
             if not url:
                 break
             page_num += 1
-
-    def paginate_users(self, users, request):
-        page = self.paginator.paginate_queryset(users, request)
-        if page is not None:
-            serializer = UserPublicSerializer(page, many=True)
-            response = self.paginator.get_paginated_response(serializer.data)
-            return response
 
 
 class TestUserSignUpView(APITestCase):
@@ -88,6 +79,7 @@ class TestUserSignUpView(APITestCase):
         }
         response = self.client.post(self.url, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(get_user_model().objects.count(), 1)
 
     def test_create_invalid_user(self):
         data = {

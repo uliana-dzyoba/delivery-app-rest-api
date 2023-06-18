@@ -7,7 +7,7 @@ from django.db.models import Value
 from authentication.mixins import UserQuerySetMixin
 from authentication.permissions import IsAdminOrIsOwnerReadOnly, IsAdminOrReadOnly
 from .models import Order, MenuItem
-from .serializers import OrderSerializer, MenuItemSerializer, OrderCreateSerializer,\
+from .serializers import OrderSerializer, MenuItemSerializer, OrderCreateSerializer, \
     OrderCustomerSerializer, OrderAdminCreateSerializer
 from .mixins import OrderStatusDateFilterMixin
 
@@ -35,7 +35,7 @@ class OrderListCreateView(OrderStatusDateFilterMixin, UserQuerySetMixin, generic
                 return OrderAdminCreateSerializer
             return OrderCreateSerializer
         # for the staff the customer of the order is shown
-        elif self.request.user.is_staff:
+        if self.request.user.is_staff:
             return OrderCustomerSerializer
         return self.serializer_class
 
@@ -54,7 +54,7 @@ class OrderListCreateView(OrderStatusDateFilterMixin, UserQuerySetMixin, generic
 
 
 class OrderDetailUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [IsAuthenticated, IsAdminOrIsOwnerReadOnly]
+    permission_classes = [IsAdminOrIsOwnerReadOnly]
     queryset = Order.objects.all()
     serializer_class = OrderCustomerSerializer
 
@@ -125,5 +125,5 @@ class MenuItemPublicListCreateView(generics.ListCreateAPIView):
 
 class MenuItemDetailUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAdminOrReadOnly]
-    queryset = Order.objects.all()
+    queryset = MenuItem.objects.all()
     serializer_class = MenuItemSerializer
